@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport de Présence</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4 text-primary">Rapport de Présence</h1>
+
+        <!-- Formulaire de sélection de date -->
+        <form th:action="@{/admin/attendance/report}" method="post" class="row g-3 mb-4">
+            <div class="col-auto">
+                <label for="date" class="form-label">Date :</label>
+                <input type="date" id="date" name="date" class="form-control" th:value="${date}">
+            </div>
+            <div class="col-auto align-self-end">
+                <button type="submit" class="btn btn-primary">Générer</button>
+            </div>
+        </form>
+
+        <!-- Enfants Présents -->
+        <div th:if="${presentChildren != null}" class="mb-5">
+            <h2 class="text-success">Enfants Présents</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Heure d'Arrivée</th>
+                            <th>Heure de Départ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="attendance : ${presentChildren}">
+                            <td th:text="${attendance.child?.name} ?: 'Inconnu'"></td>
+                            <td th:text="${attendance.arrivalTime} ?: 'Non spécifié'"></td>
+                            <td th:text="${attendance.departureTime} ?: 'Non spécifié'"></td>
+                        </tr>
+                        <tr th:if="${presentChildren.isEmpty()}">
+                            <td colspan="3" class="text-center text-muted">Aucun enfant présent</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Enfants Absents -->
+        <div th:if="${absentChildren != null}" class="mb-5">
+            <h2 class="text-danger">Enfants Absents</h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nom</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="child : ${absentChildren}">
+                            <td th:text="${child.name} ?: 'Inconnu'"></td>
+                        </tr>
+                        <tr th:if="${absentChildren.isEmpty()}">
+                            <td class="text-center text-muted">Aucun enfant absent</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Message d'erreur -->
+        <div th:if="${error != null}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+        <!-- Bouton retour -->
+        <a href="/admin/dashboard" class="btn btn-secondary">Retour</a>
+    </div>
+</body>
+</html>
