@@ -45,7 +45,7 @@ public class AdminController {
         return "admin/child-register";
     }
 
-    @PostMapping("/child/register")
+   @PostMapping("/child/register")
     @Transactional
     public String registerChild(@ModelAttribute Child child, @RequestParam String parentEmail, @RequestParam String parentPassword, Model model) {
         try {
@@ -71,7 +71,7 @@ public class AdminController {
             newChild.setParentEmail(parentEmail);
             newChild.setParentName(parent.getName()); // Set transient parentName
             newChild.setParentPhoneNumber(parent.getPhoneNumber()); // Set transient parentPhoneNumber
-            newChild.setApproved(false); // Ensure new child is not approved
+            newChild.setApproved(true); // Set to true for admin-registered children
             childRepo.save(newChild);
 
             model.addAttribute("success", "Enfant enregistré avec succès");
